@@ -12,3 +12,35 @@ const pool=mysql.createPool({
 })
 
 module.export=pool
+
+
+// Sturcture of database table.
+
+
+/*
+
+
+CREATE TABLE employees (
+id INT PRIMARY KEY  AUTO_INCREMENT,
+name VARCHAR(100) NOT NULL,
+email VARCHAR(255) UNIQUE NOT NULL  ,
+department VARCHAR(100),
+salary INT ,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+)
+
+CREATE TABLE TASKS (
+ id INT PRIMARY KEY AUTO_INCREMENT,
+ employee_id INT NOT NULL  ,
+ title VARCHAR (200) NOT NULL,
+ status ENUM('TODO','IN_PROGRESS','COMPLETED')DEFAULT 'TODO' ,
+ priority ENUM('LOW', 'MEDIUM', 'HIGH' )DEFAULT 'MEDIUM', 
+ due_date DATE,
+
+FOREIGN KEY (employee_id)
+  REFERENCES employees(id) ON DELETE CASCADE
+
+)
+
+*/
+
