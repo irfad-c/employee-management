@@ -20,4 +20,19 @@ async function createEmployeeService(name, email, department, salary) {
   };
 }
 
-module.exports = createEmployeeService;
+async function calculateTotalTasks(id) {
+  const [employee] = await pool.query("SELECT * from employees where id=?", [
+    id,
+  ]);
+  if (employee.length === 0) {
+    throw new Error("Employee didnt exist in this particular id");
+  } else {
+    const [rows] = await pool.query(
+      "SELECT COUNT(*) AS totalTask from tasks where employee_id=?",
+      [id],
+    );
+    return rows[0].totalTask;
+  }
+}
+
+module.exports = { createEmployeeService, calculateTotalTasks };
