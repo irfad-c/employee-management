@@ -55,13 +55,13 @@ async function updateTaskService(status, id) {
 
   const currentStatus = rows[0].status;
 
-  if (currentStatus === "todo" && status === "pending") {
+  if (currentStatus === "TODO" && status === "IN_PROGRESS") {
     const currentStatus = status;
     await pool.query("UPDATE tasks SET status=? WHERE id=?", [
       currentStatus,
       id,
     ]);
-  } else if (currentStatus === "pending" && status === "completed") {
+  } else if (currentStatus === "IN_PROGRESS" && status === "COMPLETED") {
     const currentStatus = status;
     await pool.query("UPDATE tasks SET status=? WHERE id=?", [
       currentStatus,

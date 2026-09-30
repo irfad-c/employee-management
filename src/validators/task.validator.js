@@ -7,20 +7,20 @@ function validateTask(req, res, next) {
     return res.status(400).json({ message: "title cannot be empty." });
   }
 
-const allowedStatus=["todo"]
+const allowedStatus=["TODO"]
 
-  if (!allowedStatus.includes(status.toLowerCase())) {
+  if (!allowedStatus.includes(status.toUpperCase())) {
     return res
       .status(400)
       .json({ message: "You can only create a todo task." });
   }
 
-  const allowedPriorities = ["low", "medium", "high"];
+  const allowedPriorities = ["LOW", "MEDIUM", "HIGH"];
 
-  if (!allowedPriorities.includes(priority.toLowerCase())) {
+  if (!allowedPriorities.includes(priority.toUpperCase())) {
     return res
       .status(400)
-      .json({ message: "Priority should be low / medium / high" });
+      .json({ message: "Priority should be LOW / MEDIUM / HIGH" });
   }
 
   if (new Date(due_date).getTime() < Date.now()) {

@@ -6,10 +6,12 @@ const {
 async function createTask(req, res) {
   try {
     const { title, status, priority, due_date, employeeId } = req.body;
+    const newStatus=status.toUpperCase()
+    const newPriority=priority.toUpperCase()
     const data = await createTaskService(
       title,
-      status,
-      priority,
+      newStatus,
+      newPriority,
       due_date,
       employeeId,
     );
@@ -25,7 +27,8 @@ async function updateTaskStatus(req, res) {
   try {
     const { status } = req.body;
     const { id } = req.params;
-    const data = await updateTaskService(status, id);
+    const newStatus=status.toUpperCase()
+    const data = await updateTaskService(newStatus, id);
     return res.status(200).json({message:"Status updated successfully."})
   } catch (error) {
     console.error(error);
