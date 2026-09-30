@@ -60,7 +60,9 @@ async function updateTaskService(status, id) {
   } else if (currentStatus === "IN_PROGRESS" && status === "COMPLETED") {
     await pool.query("UPDATE tasks SET status=? WHERE id=?", [status, id]);
   } else {
-    return "Update not possible";
+    const error = new Error("Update not possible");
+    error.statusCode = 400;
+    throw error;
   }
 }
 
