@@ -19,7 +19,7 @@ async function createTask(req, res) {
     return res.status(201).json({ message: "New task created successfully" });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Cant able to create task." });
+    return res.status(error.statusCode||500).json({ message:error.message|| "Cant able to create task." });
   }
 }
 
@@ -32,7 +32,7 @@ async function updateTaskStatus(req, res) {
     return res.status(200).json({message:"Status updated successfully."})
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Cant able to update task." });
+    return res.status(error.statusCode||500).json({ message:error.message|| "Cant able to update task." });
   }
 }
 
