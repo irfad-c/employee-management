@@ -26,6 +26,14 @@ async function calculateTotalTasks(id) {
   ]);
   if (employee.length === 0) {
     throw new Error("Employee didnt exist in this particular id");
+  }
+
+  const [task] = await pool.query("SELECT * from tasks where employee_id=?", [
+    id,
+  ]);
+
+  if (task.length === 0) {
+    throw new Error("Task didnt exist for this employee id");
   } else {
     const [rows] = await pool.query(
       "SELECT COUNT(*) AS totalTask from tasks where employee_id=?",
