@@ -52,8 +52,17 @@ async function countHighPriorityPendingTasks(id) {
   return rows.length;
 }
 
+async function countOverdueTask(id) {
+  const [rows] = await pool.query(
+    "SELECT * FROM tasks WHERE employee_id=? AND due_date < CURDATE() AND status!='COMPLETED'",
+    [id],
+  );
+  return rows.length;
+}
+
 module.exports = {
   createEmployeeService,
   calculateTotalTasks,
   countHighPriorityPendingTasks,
+  countOverdueTask,
 };

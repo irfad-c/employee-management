@@ -1,6 +1,8 @@
 const {
   createEmployeeService,
-  calculateTotalTasks,countHighPriorityPendingTasks
+  calculateTotalTasks,
+  countHighPriorityPendingTasks,
+  countOverdueTask,
 } = require("../services/emloyee.services.js");
 
 async function createEmployee(req, res) {
@@ -21,21 +23,22 @@ async function createEmployee(req, res) {
   }
 }
 
-async function calculateWorkload(req,res) {
+async function calculateWorkload(req, res) {
   const id = req.params.id;
   // Total tasks
   try {
     const totalTask = await calculateTotalTasks(id);
     const highPriorityPendingTask = await countHighPriorityPendingTasks(id);
-    return res.status(200).json({totalTask,highPriorityPendingTask});
+    const overdueTask = await countOverdueTask(id);
+    return res
+      .status(200)
+      .json({ totalTask, highPriorityPendingTask, overdueTask });
   } catch (error) {
-    if (error.message ==="Employee didnt exist in this particular id") {
+    if (error.message === "Employee didnt exist in this particular id") {
       return res.status(404).json({ message: error.message });
     }
     return res.status(500).json({ message: error.message });
   }
-
-
 }
 
 module.exports = { createEmployee, calculateWorkload };
