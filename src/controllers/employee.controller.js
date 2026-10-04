@@ -3,7 +3,7 @@ const {
   calculateTotalTasks,
   countHighPriorityPendingTasks,
   countOverdueTask,
-} = require("../services/emloyee.services.js");
+} = require("../services/employee.services.js");
 
 async function createEmployee(req, res) {
   try {
