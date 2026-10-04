@@ -36,19 +36,12 @@ async function calculateTotalTasks(id) {
 }
 
 async function countHighPriorityPendingTasks(id) {
-  const [employee] = await pool.query("SELECT * from employees where id=?", [
-    id,
-  ]);
-  if (employee.length === 0) {
-    throw new Error("Employee didnt exist in this particular id");
-  } else {
-    const [rows] = await pool.query(
-      "SELECT * from tasks where employee_id=? AND priority=? AND status=?",
-      [id,"HIGH","PENDING"],
-    );
+  const [rows] = await pool.query(
+    "SELECT * from tasks where employee_id=? AND priority=? AND status=?",
+    [id, "HIGH", "PENDING"],
+  );
 
-    return rows.length;
-  }
+  return rows.length;
 }
 
 module.exports = {
