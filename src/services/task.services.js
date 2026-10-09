@@ -1,15 +1,12 @@
 const pool = require("../config/db");
 
-async function employeeTaskCount(employeeId) {
+async function employeeActiveTaskCount(employeeId) {
   const [result] = await pool.query(
-    "select employees.id,employees.name, count(tasks.id)as task_count from employees left join tasks on employees.id=tasks.employee_id where employees.id=?group by employees.id,employees.name",
+    `SELECT COUNT(*)AS active_pending_tasks FROM tasks WHERE employee_id=? AND status!='COMPLETED'`,
     [employeeId],
   );
-  if (result.length === 0) {
-    const error = new Error("No task found for this employ");
-    throw error;
-  }
-  return result[0];
+
+  return result[0].active_pending_tasks;
 }
 
 async function createTaskService(
@@ -28,10 +25,9 @@ async function createTaskService(
     error.statusCode = 404;
     throw error;
   }
-  const tasks = await employeeTaskCount(employeeId);
-  const noOftasks = tasks.task_count;
-  if (noOftasks >= 3) {
-    const error = new Error("Task limit reached.");
+  const noOfTasks = await employeeActiveTaskCount(employeeId);
+  if (noOfTasks >= 7) {
+    const error = new Error("Active task limit reached.");
     error.statusCode = 400;
     throw error;
   }
