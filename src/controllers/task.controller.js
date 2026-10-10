@@ -4,7 +4,7 @@ const {
   summarizeTaskService,
 } = require("../services/task.services");
 
-async function createTask(req, res) {
+async function createTask(req, res, next) {
   try {
     const { title, status, priority, due_date, employeeId } = req.body;
     const newStatus = status.toUpperCase();
@@ -19,14 +19,11 @@ async function createTask(req, res) {
 
     return res.status(201).json({ message: "New task created successfully" });
   } catch (error) {
-    console.error(error);
-    return res
-      .status(error.statusCode || 500)
-      .json({ message: error.message || "Cant able to create task." });
+    next(error);
   }
 }
 
-async function updateTaskStatus(req, res) {
+async function updateTaskStatus(req, res, next) {
   try {
     const { status } = req.body;
     const { id } = req.params;
@@ -34,19 +31,16 @@ async function updateTaskStatus(req, res) {
     const data = await updateTaskService(newStatus, id);
     return res.status(200).json({ message: "Status updated successfully." });
   } catch (error) {
-    console.error(error);
-    return res
-      .status(error.statusCode || 500)
-      .json({ message: error.message || "Cant able to update task." });
+    next(error);
   }
 }
 
-async function summarizeTask(req, res) {
+async function summarizeTask(req, res, next) {
   try {
     const data = await summarizeTaskService();
     return res.status(200).json({ data });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 }
 

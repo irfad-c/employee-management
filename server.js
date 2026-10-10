@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const employeeRoutes = require("./src/routes/employee.routes");
 const taskRoutes = require("./src/routes/task.routes");
 const loggerMiddleware = require("./src/middlewares/logger.middleware");
+const errorMiddleware = require("./src/middlewares/error.middleware");
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.get("/", (req, res) => {
 app.use("/api/employees", employeeRoutes);
 app.use("/api/tasks", taskRoutes);
 
+app.use(errorMiddleware);
 app.listen(port, () => {
   console.log(`Server running on ${port}`);
 });

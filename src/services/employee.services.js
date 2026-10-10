@@ -7,7 +7,9 @@ async function createEmployeeService(name, email, department, salary) {
   ]);
 
   if (rows.length > 0) {
-    throw new Error("Email must be unique");
+    const error = new Error("Email already exist.");
+    error.statusCode = 409;
+   throw error;
   }
   const [result] = await pool.query(
     "INSERT INTO employees (name,email,department,salary) VALUES(?,?,?,?)",
@@ -25,7 +27,9 @@ async function calculateTotalTasks(id) {
     id,
   ]);
   if (employee.length === 0) {
-    throw new Error("Employee didnt exist in this particular id");
+    const error = new Error("Employee not found.");
+    error.statusCode = 404;
+    throw error;
   }
 
   const [task] = await pool.query("SELECT * from tasks where employee_id=?", [
@@ -33,7 +37,9 @@ async function calculateTotalTasks(id) {
   ]);
 
   if (task.length === 0) {
-    throw new Error("Task didnt exist for this employee id");
+    const error = new Error("Task not found.");
+    error.statusCode = 404;
+    throw error;
   } else {
     const [rows] = await pool.query(
       "SELECT COUNT(*) AS totalTask from tasks where employee_id=?",
