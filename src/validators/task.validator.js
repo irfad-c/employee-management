@@ -1,33 +1,29 @@
-function validateTask(req, res, next) {
-  const { title, status, priority, due_date, employeeId } = req.body;
-  if (!title || !status || !priority || !due_date || !employeeId) {
-    return res.status(400).json({ message: "All fields are required." });
-  }
-  if (title.trim() === "") {
-    return res.status(400).json({ message: "title cannot be empty." });
-  }
+const { body } = require("express-validator");
 
-const allowedStatus=["TODO"]
+const taskValidation = [
+  body("title").notEmpty().withMessage("Title is required"),
+  body("status")
+    .notEmpty()
+    .withMessage("Status is required")
+    .isIn(["TODO"])
+    .withMessage("You can only create a TODO task"),
+  body("priority")
+    .notEmpty()
+    .withMessage("Priority is required.")
+    .isIn(["LOW", "MEDIUM", "HIGH"])
+    .withMessage("Priority should be LOW/MEDIUM/HIGH"),
+  body("due_date")
+    .notEmpty()
+    .withMessage("Due date is required")
+    .isISO8601()
+    .withMessage("Due date must be a valid date.")
+    .custom((value) => {
+      if (new Date(value).getTime() < Date.now()) {
+        throw new Error("Due date cannot be in the past.");
+      }
+      return true;
+    }),
+  body("employee_id").notEmpty().withMessage("employee_id is required"),
+];
 
-  if (!allowedStatus.includes(status.toUpperCase())) {
-    return res
-      .status(400)
-      .json({ message: "You can only create a todo task." });
-  }
-
-  const allowedPriorities = ["LOW", "MEDIUM", "HIGH"];
-
-  if (!allowedPriorities.includes(priority.toUpperCase())) {
-    return res
-      .status(400)
-      .json({ message: "Priority should be LOW / MEDIUM / HIGH" });
-  }
-
-  if (new Date(due_date).getTime() < Date.now()) {
-    return res.status(400).json({ message: "Due date cannot be in the past." });
-  }
-
-  next();
-}
-
-module.exports = validateTask;
+module.exports = taskValidation;

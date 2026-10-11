@@ -4,10 +4,11 @@ const {
   createEmployee,
   calculateWorkload,
 } = require("../controllers/employee.controller.js");
-const validateEmployee = require("../validators/employee.validator.js");
+const employeeValidation = require("../validators/employee.validator.js");
 const authMiddleware = require("../middlewares/auth.middleware.js");
+const validate = require("../middlewares/validator.middleware.js");
 
-router.post("/", authMiddleware, validateEmployee, createEmployee);
+router.post("/", authMiddleware, employeeValidation, validate, createEmployee);
 router.get("/:id/workload", calculateWorkload);
 
 module.exports = router;
