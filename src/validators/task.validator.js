@@ -23,7 +23,7 @@ const taskValidation = [
       }
       return true;
     }),
-  body("employee_id").notEmpty().withMessage("employee_id is required"),
+  body("employeeId").notEmpty().withMessage("employeeId is required"),
 ];
 
 module.exports = taskValidation;
