@@ -9,7 +9,7 @@ async function createEmployeeService(name, email, department, salary) {
   if (rows.length > 0) {
     const error = new Error("Email already exist.");
     error.statusCode = 409;
-   throw error;
+    throw error;
   }
   const [result] = await pool.query(
     "INSERT INTO employees (name,email,department,salary) VALUES(?,?,?,?)",
@@ -51,19 +51,18 @@ async function calculateTotalTasks(id) {
 
 async function countHighPriorityPendingTasks(id) {
   const [rows] = await pool.query(
-    "SELECT * from tasks where employee_id=? AND priority=? AND status=?",
-    [id, "HIGH", "PENDING"],
+    "SELECT COUNT(*) AS highPriorityPendingTasks FROM tasks WHERE employee_id=? AND priority=? AND status=?",
+    [id, "HIGH", "IN_PROGRESS"],
   );
-
-  return rows.length;
+  return rows[0].highPriorityPendingTasks;
 }
 
 async function countOverdueTask(id) {
   const [rows] = await pool.query(
-    "SELECT * FROM tasks WHERE employee_id=? AND due_date < CURDATE() AND status!='COMPLETED'",
+    "SELECT COUNT(*)AS overdueTasks FROM tasks WHERE employee_id=? AND due_date < CURDATE() AND status!='COMPLETED'",
     [id],
   );
-  return rows.length;
+  return rows[0].overdueTasks;
 }
 
 module.exports = {
