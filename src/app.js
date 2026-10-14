@@ -1,9 +1,9 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const employeeRoutes = require("./src/routes/employee.routes");
-const taskRoutes = require("./src/routes/task.routes");
-const loggerMiddleware = require("./src/middlewares/logger.middleware");
-const errorMiddleware = require("./src/middlewares/error.middleware");
+const employeeRoutes = require("./routes/employee.routes");
+const taskRoutes = require("./routes/task.routes");
+const loggerMiddleware = require("./middlewares/logger.middleware");
+const errorMiddleware = require("./middlewares/error.middleware");
 
 dotenv.config();
 
