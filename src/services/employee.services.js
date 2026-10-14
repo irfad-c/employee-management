@@ -22,7 +22,7 @@ async function createEmployeeService(name, email, department, salary) {
   };
 }
 
-async function calculateTotalTasks(id) {
+async function workLoadStats(id) {
   const [employee] = await pool.query("SELECT * from employees where id=?", [
     id,
   ]);
@@ -32,42 +32,33 @@ async function calculateTotalTasks(id) {
     throw error;
   }
 
-  const [task] = await pool.query("SELECT * from tasks where employee_id=?", [
-    id,
-  ]);
-
-  if (task.length === 0) {
-    const error = new Error("Task not found.");
-    error.statusCode = 404;
-    throw error;
-  } else {
-    const [rows] = await pool.query(
-      "SELECT COUNT(*) AS totalTask from tasks where employee_id=?",
-      [id],
-    );
-    return rows[0].totalTask;
-  }
-}
-
-async function countHighPriorityPendingTasks(id) {
-  const [rows] = await pool.query(
-    "SELECT COUNT(*) AS highPriorityPendingTasks FROM tasks WHERE employee_id=? AND priority=? AND status=?",
-    [id, "HIGH", "IN_PROGRESS"],
-  );
-  return rows[0].highPriorityPendingTasks;
-}
-
-async function countOverdueTask(id) {
-  const [rows] = await pool.query(
-    "SELECT COUNT(*)AS overdueTasks FROM tasks WHERE employee_id=? AND due_date < CURDATE() AND status!='COMPLETED'",
+  const [task] = await pool.query(
+    `SELECT COUNT(*)AS total_tasks ,
+    CAST(SUM(CASE WHEN status='IN_PROGRESS' THEN 1 ELSE 0 END)AS UNSIGNED)AS pending_tasks,
+    CAST(SUM(CASE WHEN status='COMPLETED' THEN 1 ELSE 0 END)AS UNSIGNED)AS completed_tasks,
+    CAST(SUM(CASE WHEN status='IN_PROGRESS' AND priority='HIGH' THEN 1 ELSE 0 END)AS UNSIGNED)AS high_priority_pending,
+    CAST(SUM(CASE WHEN due_date<CURDATE() AND status!='COMPLETED' THEN 1 ELSE 0 END)AS UNSIGNED)AS overdue_tasks 
+    FROM tasks where employee_id=?`,
     [id],
   );
-  return rows[0].overdueTasks;
+
+  const total_tasks = task[0].total_tasks;
+  const pending_tasks = task[0].pending_tasks;
+  const completed_tasks = task[0].completed_tasks;
+  const high_priority_pending = task[0].high_priority_pending;
+  const overdue_tasks = task[0].overdue_tasks;
+
+  return {
+    employee_id: Number(id),
+    total_tasks,
+    pending_tasks,
+    completed_tasks,
+    high_priority_pending,
+    overdue_tasks,
+  };
 }
 
 module.exports = {
   createEmployeeService,
-  calculateTotalTasks,
-  countHighPriorityPendingTasks,
-  countOverdueTask,
+  workLoadStats,
 };

@@ -1,8 +1,6 @@
 const {
   createEmployeeService,
-  calculateTotalTasks,
-  countHighPriorityPendingTasks,
-  countOverdueTask,
+  workLoadStats,
 } = require("../services/employee.services.js");
 
 async function createEmployee(req, res, next) {
@@ -21,12 +19,8 @@ async function calculateWorkload(req, res, next) {
   const id = req.params.id;
   // Total tasks
   try {
-    const totalTask = await calculateTotalTasks(id);
-    const highPriorityPendingTask = await countHighPriorityPendingTasks(id);
-    const overdueTask = await countOverdueTask(id);
-    return res
-      .status(200)
-      .json({ totalTask, highPriorityPendingTask, overdueTask });
+    const data = await workLoadStats(id);
+    res.status(200).json(data);
   } catch (error) {
     next(error);
   }
