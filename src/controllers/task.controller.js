@@ -9,8 +9,8 @@ async function createTask(req, res, next) {
     const { title, status, priority, due_date, employeeId } = req.body;
     const data = await createTaskService(
       title,
-      newStatus,
-      newPriority,
+      status,
+      priority,
       due_date,
       employeeId,
     );
