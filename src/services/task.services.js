@@ -65,7 +65,7 @@ async function updateTaskService(status, id) {
 async function summarizeTaskService() {
   const [rows] = await pool.query(`SELECT e.name AS employee, e.department ,
 
-    COUNT(CASE WHEN t.status='IN_PROGRESS' THEN 1 END)AS pending_tasks,
+    COUNT(CASE WHEN t.status!='COMPLETED' THEN 1 END)AS pending_tasks,
 
     COUNT (CASE WHEN t.due_date<CURDATE() AND t.status !='COMPLETED' THEN 1 END)As overdue_tasks,
 

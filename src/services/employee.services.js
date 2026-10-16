@@ -34,9 +34,9 @@ async function workLoadStats(id) {
 
   const [task] = await pool.query(
     `SELECT COUNT(*)AS total_tasks ,
-    CAST(SUM(CASE WHEN status='IN_PROGRESS' THEN 1 ELSE 0 END)AS UNSIGNED)AS pending_tasks,
+    CAST(SUM(CASE WHEN status!='COMPLETED' THEN 1 ELSE 0 END)AS UNSIGNED)AS pending_tasks,
     CAST(SUM(CASE WHEN status='COMPLETED' THEN 1 ELSE 0 END)AS UNSIGNED)AS completed_tasks,
-    CAST(SUM(CASE WHEN status='IN_PROGRESS' AND priority='HIGH' THEN 1 ELSE 0 END)AS UNSIGNED)AS high_priority_pending,
+    CAST(SUM(CASE WHEN status!='COMPLETED' AND priority='HIGH' THEN 1 ELSE 0 END)AS UNSIGNED)AS high_priority_pending,
     CAST(SUM(CASE WHEN due_date<CURDATE() AND status!='COMPLETED' THEN 1 ELSE 0 END)AS UNSIGNED)AS overdue_tasks 
     FROM tasks where employee_id=?`,
     [id],
