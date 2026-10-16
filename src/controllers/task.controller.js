@@ -7,8 +7,6 @@ const {
 async function createTask(req, res, next) {
   try {
     const { title, status, priority, due_date, employeeId } = req.body;
-    const newStatus = status.toUpperCase();
-    const newPriority = priority.toUpperCase();
     const data = await createTaskService(
       title,
       newStatus,
