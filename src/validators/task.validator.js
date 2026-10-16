@@ -25,5 +25,17 @@ const taskValidation = [
     }),
   body("employeeId").notEmpty().withMessage("employeeId is required"),
 ];
+const taskStatusValidation = [
+  body("status")
+    .notEmpty()
+    .withMessage("Status is required")
+    .isIn(["IN_PROGRESS", "COMPLETED"]),
 
-module.exports = taskValidation;
+  body("id")
+    .notEmpty()
+    .withMessage("Id is required")
+    .isInt({ min: 1 })
+    .withMessage("Must be a positive number"),
+];
+
+module.exports = { taskValidation, taskStatusValidation };

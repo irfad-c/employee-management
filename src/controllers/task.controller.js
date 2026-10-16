@@ -25,8 +25,7 @@ async function updateTaskStatus(req, res, next) {
   try {
     const { status } = req.body;
     const { id } = req.params;
-    const newStatus = status.toUpperCase();
-    const data = await updateTaskService(newStatus, id);
+    const data = await updateTaskService(status, id);
     return res.status(200).json({ message: "Status updated successfully." });
   } catch (error) {
     next(error);
