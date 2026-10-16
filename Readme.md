@@ -26,14 +26,16 @@ Requirements
 
 4. Start the API
    For development with automatic restarts:
+
    npm run dev
+   
    For a normal start:
+
    npm start
+   
    The default example URL is http://localhost:3000. Visit GET http://localhost:3000/ to check whether the server is running; it should respond with Server running.
 
-Authentication
-The following endpoints require this header:
-Authorization: Bearer test-token
+
 
 Protected endpoints:
 
